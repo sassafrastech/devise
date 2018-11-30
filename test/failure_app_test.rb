@@ -157,14 +157,14 @@ class FailureTest < ActiveSupport::TestCase
 
     test 'uses the proxy failure message as symbol' do
       call_failure('warden' => OpenStruct.new(message: :invalid))
-      assert_equal 'Invalid Email or password.', @request.flash[:alert]
+      assert_equal 'Invalid email or password.', @request.flash[:alert]
       assert_equal 'http://test.host/users/sign_in', @response.second["Location"]
     end
 
     test 'supports authentication_keys as a Hash for the flash message' do
       swap Devise, authentication_keys: { email: true, login: true } do
         call_failure('warden' => OpenStruct.new(message: :invalid))
-        assert_equal 'Invalid Email, Login or password.', @request.flash[:alert]
+        assert_equal 'Invalid email, login or password.', @request.flash[:alert]
       end
     end
 
@@ -250,7 +250,7 @@ class FailureTest < ActiveSupport::TestCase
 
     test 'uses the failure message as response body' do
       call_failure('formats' => Mime[:xml], 'warden' => OpenStruct.new(message: :invalid))
-      assert_match '<error>Invalid Email or password.</error>', @response.third.body
+      assert_match '<error>Invalid email or password.</error>', @response.third.body
     end
 
     context 'on ajax call' do
@@ -299,7 +299,7 @@ class FailureTest < ActiveSupport::TestCase
       }
       call_failure(env)
       assert @response.third.body.include?('<h2>Log in</h2>')
-      assert @response.third.body.include?('Invalid Email or password.')
+      assert @response.third.body.include?('Invalid email or password.')
     end
 
     test 'calls the original controller if not confirmed email' do
@@ -334,7 +334,7 @@ class FailureTest < ActiveSupport::TestCase
           }
           call_failure(env)
           assert @response.third.body.include?('<h2>Log in</h2>')
-          assert @response.third.body.include?('Invalid Email or password.')
+          assert @response.third.body.include?('Invalid email or password.')
           assert_equal @request.env["SCRIPT_NAME"], '/sample'
           assert_equal @request.env["PATH_INFO"], '/users/sign_in'
         end
